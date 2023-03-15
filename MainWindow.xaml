@@ -1,0 +1,131 @@
+﻿<Window x:Class="WpfTutorials.ItemsControlDemo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfTutorials.ItemsControlDemo"
+        Title="MainWindow"
+        Width="600"
+        Height="450"
+        mc:Ignorable="d">
+    <Window.DataContext>
+        <local:ViewModel />
+    </Window.DataContext>
+
+    <TabControl>
+        <TabControl.Resources>
+            <Style TargetType="TabItem">
+                <Setter Property="Width" Value="80" />
+                <Setter Property="Height" Value="30" />
+                <Setter Property="Padding" Value="5" />
+            </Style>
+        </TabControl.Resources>
+        <TabItem Header="Stars">
+            <ItemsControl ItemsSource="{Binding Stars}" AlternationCount="2">
+                <ItemsControl.Template>
+                    <ControlTemplate TargetType="ItemsControl">
+                        <DockPanel>
+                            <TextBlock Margin="0,0,0,5"
+                                       HorizontalAlignment="Center"
+                                       FontSize="20"
+                                       Text="Stars in Solar System"
+                                       DockPanel.Dock="Top" />
+                            <!--<ItemsPresenter />-->
+                            <StackPanel IsItemsHost="True" />
+                        </DockPanel>
+                    </ControlTemplate>
+                </ItemsControl.Template>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Name="border" Padding="5">
+                            <TextBlock Text="{Binding}" />
+                        </Border>
+                        <DataTemplate.Triggers>
+                            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                <Setter TargetName="border" Property="Background" Value="#ccc" />
+                            </Trigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </TabItem>
+        <TabItem Header="Shapes">
+            <ItemsControl ItemsSource="{Binding Shapes}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="ContentPresenter">
+                        <Setter Property="Canvas.Left" Value="{Binding Pos.X}" />
+                        <Setter Property="Canvas.Top" Value="{Binding Pos.Y}" />
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Rectangle Name="rect"
+                                   Width="40"
+                                   Height="40"
+                                   Fill="{Binding Color}" />
+                        <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding Type}" Value="1">
+                                <Setter TargetName="rect" Property="RadiusX" Value="20" />
+                                <Setter TargetName="rect" Property="RadiusY" Value="20" />
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </TabItem>
+        <TabItem Header="Fruits">
+            <ItemsControl ItemsSource="{Binding Fruits}">
+                <ItemsControl.Resources>
+                    <DataTemplate DataType="local:Apple">
+                        <Border Height="30" Background="LightPink">
+                            <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                <TextBlock Width="80" Text="{Binding FruitType}" />
+                                <TextBlock Margin="10,0" Text="{Binding Amount, StringFormat='Amount={0}'}" />
+                                <Button Content="Order" />
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                    <DataTemplate DataType="local:Banana">
+                        <Border Height="30" Background="LightYellow">
+                            <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                <TextBlock Width="80" Text="{Binding FruitType}" />
+                                <TextBlock Margin="10,0" Text="Sold out!" />
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.Resources>
+            </ItemsControl>
+        </TabItem>
+        <TabItem Header="Employees">
+            <ItemsControl ItemsSource="{Binding Employees}" FontSize="18">
+                <ItemsControl.ItemTemplateSelector>
+                    <local:EmployeeTemplateSelector>
+                        <local:EmployeeTemplateSelector.MaleTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Background="LightCyan">
+                                    <TextBlock Width="80" Text="{Binding Name}" />
+                                    <TextBlock Width="80" Text="{Binding Gender}" />
+                                    <TextBlock Text="{Binding Age}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </local:EmployeeTemplateSelector.MaleTemplate>
+                        <local:EmployeeTemplateSelector.FemaleTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Background="LightPink">
+                                    <TextBlock Width="80" Text="{Binding Name}" />
+                                    <TextBlock Width="80" Text="{Binding Gender}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </local:EmployeeTemplateSelector.FemaleTemplate>
+                    </local:EmployeeTemplateSelector>
+                </ItemsControl.ItemTemplateSelector>
+            </ItemsControl>
+        </TabItem>
+    </TabControl>
+
+</Window>
